@@ -1,0 +1,97 @@
+---
+title: 'ggplot2 : Introductory course'
+author: "Aurélien Béliard & Gabriel Pires"
+date: "11/12/2020"
+output:
+  pdf_document: default
+  keep_tex: yes
+  toc: yes
+
+---
+
+# Loading packages
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+
+# Visualizing dataset
+```{r}
+mpg
+```
+
+```{r}
+summary(mpg)
+```
+
+
+# First plot
+
+You can create a dot plot using the following function :
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy))
+```
+
+Pretty basic, now let's add some colors : 
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class))
+```
+
+We can also add another layer as : 
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class))+
+  geom_line(aes(x=displ, y=hwy, color=class))
+```
+
+Let's now play with the shape and size !
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class), shape="diamond", size=5)+
+  geom_line(aes(x=displ, y=hwy, color=class))
+```
+
+
+Now that we have the plot we wanted, let's arrange it to make it prettier and easier to read.
+First, let's change the names of the axes to make it clearier.
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class), shape="diamond", size=5)+
+  geom_line(aes(x=displ, y=hwy, color=class))+
+  xlab("Engine displacement (L)")+
+  ylab("Highway miles/gallon")
+```
+
+We could also add a title.
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class), shape="diamond", size=5)+
+  geom_line(aes(x=displ, y=hwy, color=class))+
+  xlab("Engine displacement (L)")+
+  ylab("Highway miles/gallon")+
+  ggtitle("Highway miles/gallon as a function of Engine displacement")
+```
+
+But that's a lot of functions to add to our ggplot object. We could also use the function \textit{{\color{blue}labs}()}.
+
+```{r}
+ggplot(mpg)+
+  geom_point(aes(x=displ, y=hwy, color=class), shape="diamond", size=5)+
+  geom_line(aes(x=displ, y=hwy, color=class))+
+  labs(x="Engine displacement (L)",
+  y="Highway miles/gallon",
+  title="Highway miles/gallon as a function of Engine displacement",
+  color="Car classes")
+```
+
+With this function we can also replace the name of the aesthetics, color, shape, size, fill, group, etc.
+
+
