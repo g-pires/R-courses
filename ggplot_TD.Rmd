@@ -14,6 +14,7 @@ output:
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(ggpubr)
 ```
 
 
@@ -27,7 +28,7 @@ summary(mpg)
 ```
 
 
-# First plot
+# Doplots
 
 You can create a dot plot using the following function :
 ```{r}
@@ -94,5 +95,178 @@ ggplot(mpg)+
 ```
 
 With this function we can also replace the name of the aesthetics, color, shape, size, fill, group, etc.
+
+# Barplots
+
+```{r}
+ggplot(mpg)+
+  geom_bar(aes(x=displ, color=class))
+
+```
+
+As you can see, by filling only the color aesthetics, we only color the contour of the bars. To fill the bars with a color, we can use the fill aesthetic as follow : 
+
+```{r}
+ggplot(mpg)+
+  geom_bar(aes(x=displ, color=class, fill=class))+
+  labs(x="Engine displacement (L)", 
+       color="Car classes", 
+       fill="Car classes", 
+       title="Engine displacement distribution")
+```
+
+The \textit{x} axis can be treated either as a continuous variable or a discrete variable. 
+To treat the \textit{x} axis as a continuous variable, use the \textit{{\color{blue} as.numeric}()} function as follow : 
+
+```{r}
+mpg$displ<-as.numeric(mpg$displ)
+
+ggplot(mpg)+
+  geom_bar(aes(x=displ, color=class, fill=class))+
+  labs(x="Engine displacement (L)", 
+       color="Car classes", 
+       fill="Car classes", 
+       title="Engine displacement distribution")
+
+
+```
+
+
+If you consider that your variable should be discrete, then use \textit{{\color{blue} as.factor}()} function as follow : 
+
+```{r}
+mpg$displ<-as.factor(mpg$displ)
+
+ggplot(mpg)+
+  geom_bar(aes(x=displ, color=class, fill=class))+
+  labs(x="Engine displacement (L)", 
+       color="Car classes", 
+       fill="Car classes", 
+       title="Engine displacement distribution")
+
+
+```
+
+
+In such cases, the \textit{x} axis can be blurry and sometimes, the labels are not clear. To make it clearier, one could use the functions  \textit{{\color{blue} scale\_x\_continuous}()} or \textit{{\color{blue} scale\_x\_discrete}()} as : 
+
+
+```{r}
+mpg$displ<-as.numeric(mpg$displ)
+
+ggplot(mpg)+
+  geom_bar(aes(x=displ, color=class, fill=class))+
+  labs(x="Engine displacement (L)", 
+       color="Car classes", 
+       fill="Car classes", 
+       title="Engine displacement distribution")+
+  scale_x_continuous(breaks=seq(0, max(mpg$displ), 5))
+
+
+```
+
+
+\underline{NB} : Here, I call the max function to get the maximum value displayed on the \textit{x} axis. By doing so, we suppose that the maximum value can change from a dataset to another, so it's better to never use a maximum value chosen by hand.
+
+Of course, here it doesn't make sense to convert the engine displacement values as factors. So we will try with another variable which is more suitable for this kind of work. We will use the class variable for our discrete variable. With \textit{{\color{blue}scale\_x\_discrete}()} we can assign another name to each label as follow : 
+
+```{r}
+
+ggplot(mpg)+
+  geom_bar(aes(x=class, fill=fl))+
+  labs(x="Car classes", 
+       color="Fuel type", 
+       fill="Fuel type", 
+       title="Car classes per fuel type")+
+  scale_x_discrete(labels=c("2seater"="2SEAT", 
+                            "compact"="Compact", 
+                            "midsize"="Midsize", 
+                            "minivan"="Minivan", 
+                            "pickup"="Pickup", 
+                            "subcompact"="Subcompact", 
+                            "suv"="SUV"))
+  
+
+```
+
+
+
+# Boxplot
+
+To create a boxplot with ggplot2, we use the geom_function \textit{{\color{blue} geom\_boxplot}()} as follow :
+
+```{r}
+
+ggplot(mpg, aes(x=class, y=hwy))+
+  geom_boxplot(aes(fill=class))+
+  labs(x="Car classes", 
+       color="Fuel type", 
+       fill="Fuel type", 
+       title="Car classes per fuel type")+
+  ylim(0, 50)+
+  scale_x_discrete(labels=c("2seater"="2SEAT", 
+                            "compact"="Compact", 
+                            "midsize"="Midsize", 
+                            "minivan"="Minivan", 
+                            "pickup"="Pickup", 
+                            "subcompact"="Subcompact", 
+                            "suv"="SUV"))
+  
+
+```
+
+If we want the significance level between each group, we can use the \textit{{\color{blue} stat\_compare\_means}()} function as follow : 
+
+```{r}
+
+box<-ggplot(mpg, aes(x=class, y=hwy))+
+  geom_boxplot(aes(fill=class))+
+  stat_compare_means(aes(label = ..p.signif..),
+                     method="wilcox.test", 
+                     label.x = 1.5, 
+                     label.y = 50, 
+                     ref.group = ".all.")+
+  labs(x="Car classes", 
+       color="Car classes", 
+       fill="Car classes", 
+       title="highway miles per gallon as a function of the car classes")+
+  ylim(0, 50)+
+  scale_x_discrete(labels=c("2seater"="2SEAT", 
+                            "compact"="Compact", 
+                            "midsize"="Midsize", 
+                            "minivan"="Minivan", 
+                            "pickup"="Pickup", 
+                            "subcompact"="Subcompact", 
+                            "suv"="SUV"))
+  
+box
+```
+
+
+# Theme creation
+
+There exist several themes in ggplot2, black and white, gray, void, minimal, classic, light and so on. But what if we want our own theme, with the colors we want, a grid or not, and a specific font ? We must create our own theme to do that. Here we will use the black and white theme as a base theme and the function \textit{{\color{blue} %+replace%}} which replaces the entire element in a theme and if any element of a theme is not specified in the new theme, it will not be present in the resulting theme.
+
+```{r}
+
+my_theme<-function(){
+  theme_bw() %+replace%
+  theme(plot.title = element_text(hjust = 0.5), #centers the title
+        panel.border=element_blank(), 
+        panel.grid.major = element_blank(), #to remove the grid
+        panel.grid.minor = element_blank(), #to remove the grid
+        panel.background = element_rect(fill="white"), #to fill the background with a white color
+        axis.line = element_blank(), 
+        legend.justification = c(0, 1))
+}
+
+
+```
+
+To apply the theme to your own plot, just add the newly created theme as if you were adding a new layer.
+
+```{r}
+box+my_theme()
+```
 
 
