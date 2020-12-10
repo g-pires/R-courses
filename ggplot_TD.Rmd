@@ -311,7 +311,7 @@ jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
 jitt
 ```
 
-And now we have a very correlation between our \textit{x} and \textit{y} axes.
+And now we have a very good correlation between our \textit{x} and \textit{y} axes.
 
 
 # Facetting
