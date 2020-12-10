@@ -404,7 +404,8 @@ my_theme<-function(){
         panel.grid.minor = element_blank(), #to remove the grid
         panel.background = element_rect(fill="white"), #to fill the background with a white color
         axis.line = element_blank(), 
-        legend.justification = c(0, 1))
+        legend.justification = c(0, 1), 
+        legend.position="right") #“left”,“top”, “right”, “bottom” or coordinate c(x, y) with x and y between 0 and 1
 }
 
 
