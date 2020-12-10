@@ -16,6 +16,10 @@ library(ggplot2)
 library(plotly)
 library(ggpubr)
 library(extrafont)
+
+```
+
+```{r, include=FALSE}
 loadfonts(device = "win")
 ```
 
@@ -244,6 +248,66 @@ box<-ggplot(mpg, aes(x=class, y=hwy))+
 box
 ```
 
+# Stripchart
+
+A stripchart or jitter is a plot that produces a one dimensional dot plot of the given data. We create it with the \textit{{\color{blue} geom\_jitter}()} function.
+
+```{r}
+ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )
+
+```
+
+We can map the tendency of the dots using the \textit{{\color{blue} abline}()} function as follow : 
+
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  geom_abline(colour="blue", 
+              size=1)
+jitt
+```
+
+So, as you can see, the line is not mapping our dots at all. To do so, it's better to perform a linear regression to estimate the slope and intercept of the line. 
+
+```{r}
+
+reg<-lm(hwy~cty, data=mpg)
+reg
+
+```
+
+
+
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  geom_abline(colour="blue", 
+              size=1, 
+              intercept = reg$coefficients[[1]], 
+              slope=reg$coefficients[[2]])
+jitt
+```
+
+And now we have a very correlation between our \textit{x} and \textit{y} axes.
 
 # Theme creation
 
@@ -254,7 +318,10 @@ We must create our own theme to do that. Here we will use the black and white th
 
 my_theme<-function(){
   theme_bw() %+replace%
-  theme(plot.title = element_text(hjust = 0.5, face="bold", colour="blue", family = "Times"), #centers the title
+  theme(plot.title = element_text(hjust = 0.5, 
+                                  face="bold", 
+                                  colour="blue", 
+                                  family = "Times"), #centers the title
         panel.border=element_blank(), 
         panel.grid.major = element_blank(), #to remove the grid
         panel.grid.minor = element_blank(), #to remove the grid
@@ -272,4 +339,7 @@ To apply the theme to your own plot, just add the newly created theme as if you 
 box+my_theme()
 ```
 
+```{r}
+jitt+my_theme()
+```
 
