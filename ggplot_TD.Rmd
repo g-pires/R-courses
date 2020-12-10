@@ -305,7 +305,9 @@ jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
   geom_abline(colour="blue", 
               size=1, 
               intercept = reg$coefficients[[1]], 
-              slope=reg$coefficients[[2]])
+              slope=reg$coefficients[[2]])+
+  geom_text(aes(x=10, y=45, label=paste0("R2 : ", round(summary(reg)[[9]],4))), color="black")
+  
 jitt
 ```
 
