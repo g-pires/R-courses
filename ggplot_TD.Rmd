@@ -309,6 +309,83 @@ jitt
 
 And now we have a very correlation between our \textit{x} and \textit{y} axes.
 
+
+# Facetting
+
+Using facetting, you can split your plot based on one or several variables :
+
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  facet_wrap(~class)+
+  geom_abline(colour="blue", 
+              size=1, 
+              intercept = reg$coefficients[[1]], 
+              slope=reg$coefficients[[2]])
+jitt
+```
+
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  facet_grid(~class)+
+  geom_abline(colour="blue", 
+              size=1, 
+              intercept = reg$coefficients[[1]], 
+              slope=reg$coefficients[[2]])
+jitt
+```
+
+Splitting by several variables : 
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  facet_wrap(~class+drv)+
+  geom_abline(colour="blue", 
+              size=1, 
+              intercept = reg$coefficients[[1]], 
+              slope=reg$coefficients[[2]])
+jitt
+```
+
+You can evene choose the number of rows and columns to display on the plot : 
+
+```{r}
+jitt<-ggplot(mpg, aes(cty, hwy, color=factor(cyl)))+
+  geom_jitter()+
+  labs(
+    x = "City mileage/gallon",
+    y = "Highway mileage/gallon",
+    colour = "Cylinders",
+    title = "Highway and city mileage are highly correlated"
+  )+
+  facet_wrap(~class+drv, nrow=4, ncol=3)+
+  geom_abline(colour="blue", 
+              size=1, 
+              intercept = reg$coefficients[[1]], 
+              slope=reg$coefficients[[2]])
+jitt
+```
+
+
 # Theme creation
 
 There exist several themes in ggplot2, black and white, gray, void, minimal, classic, light and so on. But what if we want our own theme, with the colors we want, a grid or not, and a specific font ? 
