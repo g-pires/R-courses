@@ -34,7 +34,7 @@ summary(mpg)
 ```
 
 
-# Doplots
+# Dotplots
 
 You can create a dot plot using the following function :
 ```{r}
@@ -120,6 +120,8 @@ ggplot(mpg)+
        fill="Car classes", 
        title="Engine displacement distribution")
 ```
+\underline{NB} : This occurs because displ is numeric, so the ggplot object assumes a continuous x-axis, and aesthetic parameter group is based on the only known discrete variable (fill = class).
+
 
 The \textit{x} axis can be treated either as a continuous variable or a discrete variable. 
 To treat the \textit{x} axis as a continuous variable, use the \textit{{\color{blue} as.numeric}()} function as follow : 
@@ -389,7 +391,7 @@ jitt
 # Theme creation
 
 There exist several themes in ggplot2, black and white, gray, void, minimal, classic, light and so on. But what if we want our own theme, with the colors we want, a grid or not, and a specific font ? 
-We must create our own theme to do that. Here we will use the black and white theme as a base theme and the function \textit{{\color{blue} %+replace%}} which replaces the entire element in a theme and if any element of a theme is not specified in the new theme, it will not be present in the resulting theme.
+We must create our own theme to do that. Here we will use the black and white theme as a base theme and the function \textit{{\color{blue}\%+replace\%}} which replaces the entire element in a theme and if any element of a theme is not specified in the new theme, it will not be present in the resulting theme.
 
 ```{r}
 
